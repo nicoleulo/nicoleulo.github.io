@@ -1,12 +1,344 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Take Home Pay Calculator Support</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Take Home Pay Calculator – Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple-light: #b57bee;
+      --purple-mid: #8b3ec8;
+      --purple-dark: #5a1e96;
+      --purple-deep: #3b0e6e;
+      --purple-bg: #f5f0fb;
+      --purple-card: #ede5f8;
+      --purple-border: #d4bff0;
+      --white: #ffffff;
+      --dark: #1e0d35;
+      --gray: #6b5680;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--purple-bg);
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(160deg, #b57bee 0%, #7b2abf 45%, #4a1282 100%);
+      padding: 64px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 40px;
+      background: var(--purple-bg);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    .app-icon {
+      width: 96px;
+      height: 96px;
+      background: linear-gradient(160deg, #c48df2 0%, #7b2abf 45%, #4a1282 100%);
+      border-radius: 24px;
+      margin: 0 auto 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(90,30,150,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(26px, 5vw, 40px);
+      color: var(--white);
+      position: relative;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 12px rgba(60,10,100,0.3);
+    }
+    header p {
+      color: rgba(255,255,255,0.75);
+      font-size: 15px;
+      position: relative;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 28px 24px 0;
+    }
+    nav a {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--purple-mid);
+      padding: 7px 18px;
+      border: 1.5px solid var(--purple-border);
+      border-radius: 99px;
+      background: var(--white);
+      transition: all 0.2s;
+    }
+    nav a:hover {
+      background: var(--purple-mid);
+      color: var(--white);
+      border-color: var(--purple-mid);
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    section { margin-bottom: 52px; }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--dark);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--purple-border);
+    }
+
+    p {
+      color: var(--gray);
+      margin-bottom: 14px;
+      font-size: 15px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1.5px solid var(--purple-border);
+      border-radius: 16px;
+      padding: 22px 18px;
+      transition: box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      box-shadow: 0 4px 20px rgba(139,62,200,0.12);
+    }
+    .feature-card .icon { font-size: 28px; margin-bottom: 10px; }
+    .feature-card h3 { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+    .feature-card p { font-size: 13px; margin: 0; }
+
+    .faq-item {
+      background: var(--white);
+      border: 1.5px solid var(--purple-border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 12px;
+    }
+    .faq-item h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .faq-item p { font-size: 14px; margin: 0; }
+
+    .contact-box {
+      background: linear-gradient(135deg, #c48df2 0%, #7b2abf 100%);
+      border-radius: 20px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(90,30,150,0.25);
+    }
+    .contact-box h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+    .contact-box p {
+      font-size: 14px;
+      max-width: 400px;
+      margin: 0 auto 22px;
+      color: rgba(255,255,255,0.82);
+    }
+    .contact-btn {
+      display: inline-block;
+      background: var(--white);
+      color: var(--purple-mid);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 13px 30px;
+      border-radius: 99px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(60,10,100,0.2);
+    }
+    .contact-btn:hover {
+      background: var(--purple-deep);
+      color: var(--white);
+    }
+
+    .privacy-block {
+      background: var(--white);
+      border: 1.5px solid var(--purple-border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .privacy-block ul {
+      padding-left: 18px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    .privacy-block ul li { margin-bottom: 8px; }
+
+    footer {
+      text-align: center;
+      padding: 28px;
+      border-top: 1px solid var(--purple-border);
+      font-size: 12px;
+      color: #b09ac4;
+    }
+  </style>
 </head>
 <body>
-  <h1>Take Home Pay Calculator Support</h1>
-  <p>Support page for the Take Home Pay Calculator app.</p>
-  <p><a href="/app-ads.txt">app-ads.txt</a></p>
+
+<header>
+  <div class="app-icon">💵</div>
+  <h1>Take Home Pay Calculator</h1>
+  <p>Know exactly what lands in your pocket — before you accept the offer.</p>
+</header>
+
+<nav>
+  <a href="#about">About</a>
+  <a href="#how-to-use">How to Use</a>
+  <a href="#faq">FAQ</a>
+  <a href="#privacy">Privacy</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<main>
+
+  <section id="about">
+    <h2>About the App</h2>
+    <p>Take Home Pay Calculator helps you understand your real earnings after taxes, deductions, and withholdings. Whether you're evaluating a job offer, negotiating a raise, or just budgeting smarter — this app gives you the clarity you need.</p>
+    <div class="features">
+      <div class="feature-card">
+        <div class="icon">🧮</div>
+        <h3>Accurate Tax Estimates</h3>
+        <p>Federal and state tax breakdowns based on your income and filing status.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Paycheck Breakdown</h3>
+        <p>See gross pay, deductions, and net pay side by side.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⚡</div>
+        <h3>Instant Results</h3>
+        <p>Calculations update in real time as you adjust your inputs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-to-use">
+    <h2>How to Use</h2>
+    <p>Getting started takes less than a minute:</p>
+    <div class="faq-item">
+      <h3>1. Enter Your Salary or Hourly Rate</h3>
+      <p>Input your annual salary or hourly wage. You can also set your pay frequency (weekly, bi-weekly, semi-monthly, or monthly).</p>
+    </div>
+    <div class="faq-item">
+      <h3>2. Select Your Filing Status & State</h3>
+      <p>Choose your tax filing status (single, married, etc.) and the state you work in so the app can apply the correct tax rates.</p>
+    </div>
+    <div class="faq-item">
+      <h3>3. Add Deductions (Optional)</h3>
+      <p>Include pre-tax deductions like 401(k) contributions or health insurance premiums for a more precise estimate.</p>
+    </div>
+    <div class="faq-item">
+      <h3>4. View Your Take Home Pay</h3>
+      <p>The app instantly shows your estimated net pay per paycheck and annually, along with a full tax breakdown.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <h3>Is this app free?</h3>
+      <p>Yes, the core calculator is free to use.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Are the tax calculations exact?</h3>
+      <p>The app provides estimates based on standard federal and state tax brackets. Individual situations vary — always consult a tax professional for precise figures.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does the app store my personal information?</h3>
+      <p>No. All calculations happen on your device. We do not collect, store, or transmit your income or financial data.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Which states are supported?</h3>
+      <p>The app supports all 50 U.S. states, including states with no income tax.</p>
+    </div>
+    <div class="faq-item">
+      <h3>My calculation seems off — what should I do?</h3>
+      <p>Double-check your filing status, state, and pay frequency. If something still looks wrong, please contact us and we'll look into it.</p>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <h2>Privacy Policy</h2>
+    <div class="privacy-block">
+      <p>Your privacy is important to us. Here's what you need to know:</p>
+      <ul>
+        <li><strong>No personal data collected:</strong> We do not collect your name, salary, or any financial information.</li>
+        <li><strong>On-device processing:</strong> All calculations run locally on your iPhone. Nothing is sent to our servers.</li>
+        <li><strong>Analytics:</strong> We may use anonymized, aggregate analytics to understand how the app is used and improve it. This data cannot identify you.</li>
+        <li><strong>Advertising:</strong> The app may display ads. Ad networks may use device identifiers in accordance with your App Tracking Transparency preferences.</li>
+        <li><strong>No selling of data:</strong> We do not sell any data to third parties.</li>
+      </ul>
+      <p style="margin-top:16px; font-size:13px;">Last updated: March 2026</p>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact & Support</h2>
+    <div class="contact-box">
+      <h3>We're here to help</h3>
+      <p>Have a question, found a bug, or want to suggest a feature? Reach out and we'll get back to you as soon as possible.</p>
+      <a class="contact-btn" href="mailto:nicoleu1999@gmail.com">Email Support</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 niculocreate · Take Home Pay Calculator · All rights reserved</p>
+</footer>
+
 </body>
 </html>
